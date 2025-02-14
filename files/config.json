@@ -1,0 +1,23 @@
+{
+  "graphics": {
+    "showid": true,
+    "showemojis": true,
+    "maxhistory": 15,
+    "showlogs": true
+  },
+  "bible": {
+      "_comment" : "check https://bible-api.com/ for all translations",
+      "translation": "oeb-cw"
+  },
+  "emoji": {
+    "randomemoji": true,
+    "if_false_thenchoosethisemoji": "✝️",
+    "show_emojisInLogs": true
+  },
+  "startup": {
+    "customstartupmessage": true,
+    "custom_startmessage": "Opening the Bible...",
+    "customshutdownmessage": true,
+    "custom_shutmessage": "Closing the Bible..."
+  }
+}
