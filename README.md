@@ -7,7 +7,7 @@ This project is a client designed to send Bible verses in VRChat using OSC (Open
 - Sends messages to VRChat's chatbox via OSC.
 - Configurable settings via `config.json`.
 - Emoji customization.
-- Works on Windows and Linux/MacOS/Unix systems.
+- Works on Windows and most Unix systems.
 
 ## Installation
 ### Windows (Winget)
@@ -57,8 +57,10 @@ Make sure that OSC is enabled in VRChat.
 Modify `config.json` to adjust settings such as emoji usage, Bible translation ([Bible API](https://bible-api.com/)), and display preferences.
 
 ## License
-This project is licensed under the GNU General Public License 3.0 (GPL 3.0).
+This software is subject to the terms of the GNU General Public License 3.0 (GPL 3.0). By this, you are free to use, make changes and pass on the software. But such modification and enhancements have to also be licensed in GPL 3.0 as well.
 
 ## Disclaimer
 Some groups/people may not like that you have a Bible on your head.
 It's not the dev's (me) fault if you get kicked/banned from some groups.
+
+# God bless you.
