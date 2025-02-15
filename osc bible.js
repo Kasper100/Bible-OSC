@@ -174,7 +174,7 @@ async function getBibleVerse()
     }
 };
 
-// * funktion navn siger det hele
+// * funktion'en navn siger det hele
 async function startSendingVerses()
 {
     while (true)
@@ -247,7 +247,7 @@ async function startSendingVerses()
                 console.log(verse + `(ID: ${versID})`);
             }
         }
-        if (!showlines || !showlines && showmainlines) {
+        if (showlines || !showlines && showmainlines) {
             console.log(`╚══════════${emojis[rng(emojis.length - 1, 0)]}═════════╝\n`, messages[0]);
         }
             // ! Math.min(verse.length, ms pr bogstav), min) max);
