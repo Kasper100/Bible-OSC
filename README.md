@@ -82,7 +82,7 @@ Ensure that OSC is enabled in VRChat.
 Modify `config.json` to adjust settings such as emoji usage, Bible translation, and display preferences.
 
 ## License
-This project is licensed under the GNU General Public License 2.0 (GPL 2.0).
+This project is licensed under the GNU General Public License 3.0 (GPL 3.0).
 
 ## Disclaimer
 Use this client responsibly. The developer is not responsible for any bans or actions taken against users in VRChat.
