@@ -10,7 +10,7 @@ This project is a client designed to send Bible verses in VRChat using OSC (Open
 - Works on Windows and Linux/Unix systems
 
 ## Installation
-### Windows (Scoop or Winget)
+### Windows (Winget)
 ```batch
 winget install -e --id OpenJS.NodeJS
 ```
