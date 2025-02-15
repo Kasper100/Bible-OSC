@@ -12,32 +12,7 @@ This project is a client designed to send Bible verses in VRChat using OSC (Open
 ## Installation
 ### Windows (Scoop or Winget)
 ```batch
-@echo off
-setlocal
-
-:: Check if Scoop is installed
-where scoop >nul 2>nul
-if %errorlevel% equ 0 (
-    echo Installing Node.js using Scoop...
-    scoop install nodejs-lts
-) else (
-    echo Scoop not found. Installing Node.js using winget
-    winget install OpenJS.NodeJS
-)
-
-:: Verify installation
-node -v && npm -v
-if %errorlevel% equ 0 (
-    echo Node.js installation successful!
-    echo Now installing required packages
-    npm i node-osc
-    npm i node-fetch
-) else (
-    echo Node.js installation failed.
-)
-
-endlocal
-pause
+winget install -e --id OpenJS.NodeJS
 ```
 ### Linux
 #### Ubuntu/Debian:
