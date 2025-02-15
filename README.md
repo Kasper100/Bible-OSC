@@ -11,7 +11,7 @@ This project is a client designed to send Bible verses in VRChat using OSC (Open
 
 ## Installation
 ### Windows (Winget)
-```batch
+```pwsh
 winget install -e --id OpenJS.NodeJS
 ```
 ### Linux
@@ -37,13 +37,14 @@ Refer to your package manager's documentation.
 ### Install Required Packages
 ```sh
 npm install node-osc node-fetch
+npm install -g figlet
 ```
 
 ## Usage
 Run the client with:
 
 #### Windows:
-```sh
+```pwsh
 node "osc bible.js"
 ```
 #### Linux:
