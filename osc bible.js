@@ -16,9 +16,8 @@ REMARKS:                                                                        
 */
 
 const osc = require('node-osc');
-const fetch = require("node-fetch"); // -18v support
-const config = require("./files/config.json")
-const figlet = require("figlet");
+const config = require('./files/config.json'); // JSON loading via require
+const figlet = require('figlet');
 /*
 TODO: Spread the gospel
 TODO: Spread the Word of God in VRChat
