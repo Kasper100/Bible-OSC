@@ -3,6 +3,8 @@
 INFORMATION:                                                                              |
     Hi! Most of the comments are in Danish. Please translate them to understand them.     |
     This program was made with Windows in mind but also supports Linux/Unix systems.      |
+    If you are using VSCode to look through the code, then please have-                   |
+    the extension "Better Comments" installed as it should be easier to read and sort.    |
 ------------------------------------------------------------------------------------------|
 REMARKS:                                                                                  |
     Remember that this is made for a game for the social platform VRChat,                 |
@@ -16,7 +18,7 @@ REMARKS:                                                                        
 const osc = require('node-osc');
 const fetch = require("node-fetch"); // -18v support
 const config = require("./files/config.json")
-
+const figlet = require("figlet");
 /*
 TODO: Spread the gospel
 TODO: Spread the Word of God in VRChat
@@ -36,6 +38,12 @@ if (maxhistory === 0) {
 }
 const showemoji = Boolean(config.graphics.showemojis);
 const showlogs = Boolean(config.graphics.showlogs);
+const showlines = Boolean(config.graphics.guilines)
+if (!showlines) {
+    var showmainlines = Boolean(config.graphics.showtopandbottom_if_guilinesIsFalse);
+} else {
+    var showmainlines = Boolean(config.graphics.showtopandbottom_if_guilinesIsFalse);
+}
 
 //* bible
 const bibletranslation = config.bible.translation;
@@ -47,11 +55,10 @@ const showemojiinlogs = Boolean(config.emoji.show_emojisInLogs);
 
 //* startup / shutdown
 const custom_startup_bool = Boolean(config.startup.customstartupmessage); // true or false
-let custom_startup_msg;
 if (custom_startup_bool) {
-    custom_startup_msg = String(config.startup.custom_startmessage);
+    var custom_startup_msg = String(config.startup.custom_startmessage);
 } else {
-    custom_startup_msg = "Starting " + __filename.split(/[\\/]/).pop();
+    var custom_startup_msg = "Starting " + __filename.split(/[\\/]/).pop();
 }
 
 const custom_shutdown_bool = Boolean(config.startup.customshutdownmessage); // true or false
@@ -79,11 +86,12 @@ const emojis = [
     "👼", // * engel 2
     "🐟", // * jesus kristus fisk (Ichthys)
     "🛐", // * beder (til jesus kristus)
-    "🌟", // * den stor stjerne over jesus kristus i bethlehem
+    "🌟", // * den stor stjerne over jesus kristus i bethlehem                                          
     "🍷", // * lord's supper (jeg ved ikke, hvad det hedder på dansk)
     "❤️", // * luthersk hjerte
     "🍎", // * videns æble
-    "👑" // * king of kings
+    "👑", // * king of kings
+    "⚰️" // * bormand er død
 ]; // * 1 string lang please. hvis det er °, så er den unsigned af VRC's unicode version (gammel lort 👴👴👴👴👴👴)
 //! ༒ er ikke en kors men er en tibetansk udtale mark
 
@@ -98,6 +106,17 @@ function rng(max, min)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+function figlettext(text) {
+    figlet(text, function (err, data) {
+        if (err) {
+            console.error('Something went wrong:', err);
+            return;
+        } else {
+            console.log(data);
+        }}
+    )
+}
 
 // send en OSC besked til /chatbox/input
 async function sendMessage(message)
@@ -117,30 +136,41 @@ async function sendMessage(message)
         await sleep(Math.max(5000, chunk.length * 100));
     }
 };
-console.log(custom_startup_msg);
+figlettext(custom_startup_msg);
 sendMessage(custom_startup_msg);
 // får en vers fra biblen
 async function getBibleVerse()
 {
-    try
-    {
-        const response = await fetch(`https://bible-api.com/data/${bibletranslation}/random`);
-        const data = await response.json();
-        if (data.random_verse && data.random_verse.book && data.random_verse.chapter && data.random_verse.verse && data.random_verse.text)
+    let retries = 3;
+    let trys = 0;
+    while (trys < retries) {
+        try
         {
+            const response = await fetch(`https://bible-api.com/data/${bibletranslation}/random`);
+            const data = await response.json();
+            if (data.random_verse && data.random_verse.book && data.random_verse.chapter && data.random_verse.verse && data.random_verse.text)
+            {
             /* format:
                {BOOK} {CHAPTER}:{VERSE};
                {TEXT}
             */
-            return `${data.random_verse.book} ${data.random_verse.chapter}:${data.random_verse.verse};\n${data.random_verse.text}`;
-        } else
+                return `${data.random_verse.book} ${data.random_verse.chapter}:${data.random_verse.verse};\n${data.random_verse.text}`;
+            } else
+            {
+                throw new Error("Invalid response structure from API");
+            }
+        } catch (error)
         {
-            throw new Error("Invalid response structure from API");
+            console.error("Error fetching Bible verse:", error);
+            trys++;
+            if (trys < retries)
+            {
+                console.log("retrying to fetch bible verse from API")
+                await sleep(1000)
+            } else {
+                return "Error: Unable to fetch a Bible verse.\nPlease check config.json or the API";
+            }
         }
-    } catch (error)
-    {
-        console.error("Error fetching Bible verse:", error);
-        return "Error: Unable to fetch a Bible verse.\nPlease check config.json or the API";
     }
 };
 
@@ -153,63 +183,74 @@ async function startSendingVerses()
         if (messages.length > maxhistory) {
             messages.splice(1, messages.length - maxhistory)
         }
-        let verse;
         // ikke send samme vers
         do {
-            verse = await getBibleVerse();
+            var verse = await getBibleVerse();
         } while (verse == lastverse);
         
         lastverse = verse;
         
-        let chosenEmoji;
-        
         if (showemoji) {
             if (randomemoji) {
-                chosenEmoji = emojis[rng(emojis.length - 1, 0)];
+                var chosenEmoji = emojis[rng(emojis.length - 1, 0)];
             } else {
-                chosenEmoji = nonrandomchosenemoji;
+                var chosenEmoji = nonrandomchosenemoji;
             }
         } else {
-            chosenEmoji = "";
+            var chosenEmoji = "";
         }
         
         versID += 1;
         
         sendMessage(chosenEmoji + verse);
-        if (showid) {
-            if (showemojiinlogs) {
+        if (showid)
+        {
+            if (showemojiinlogs)
+            {
                 messages.push(chosenEmoji + verse + `(ID: ${versID})`);
             } else {
                 messages.push(verse + `(ID: ${versID})`)
             }
         } else {
-            if (showemojiinlogs) {
+            if (showemojiinlogs)
+            {
                 messages.push(chosenEmoji + verse)
             } else {
                 messages.push(verse)
             }
         }
-
-        console.log(`╔══════════${emojis[rng(emojis.length - 1, 0)]}═════════╗`)
+        if (showlines || !showlines && showmainlines)
+        {
+            console.log(`╔══════════${emojis[rng(emojis.length - 1, 0)]}═════════╗`)
+        }
         if (showlogs)
         {
             // gental historie
             for (let i = 1; i < messages.length; i++)
             {
-                console.log(messages[i], `\n`);
+                if (showlines)
+                {
+                    console.log("══════════╗");
+                    console.log(messages[i]);
+                    console.log("══════════╝");
+                } else
+                {
+                    console.log(messages[i], "\n");
+                }
             }
         } else 
         {
             if (showemojiinlogs)
             {
                 console.log(chosenEmoji + verse + `(ID: ${versID})`);
-            } else
-            {
+            } else {
                 console.log(verse + `(ID: ${versID})`);
             }
         }
-        console.log(`╚══════════${emojis[rng(emojis.length - 1, 0)]}═════════╝\n`, messages[0]);
-        // ! Math.min(verse.length, ms pr bogstav), min) max);
+        if (!showlines || !showlines && showmainlines) {
+            console.log(`╚══════════${emojis[rng(emojis.length - 1, 0)]}═════════╝\n`, messages[0]);
+        }
+            // ! Math.min(verse.length, ms pr bogstav), min) max);
         const interval = Math.min(Math.max(verse.length * 750, 10000), 30000);
         await sleep(interval);
     }
@@ -221,7 +262,7 @@ startSendingVerses();
 // ! GET OUT!!!!
 process.on('SIGINT', () => {
     console.log("\x1Bc");
-    console.log(custom_shutdown_msg);
+    figlettext(custom_shutdown_msg);
     client.close();
     process.exit();
 });

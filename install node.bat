@@ -22,7 +22,7 @@ if %errorlevel% neq 0 (
 echo Node.js installation successful!
 echo Now installing required packages...
 
-npm install node-osc node-fetch
+npm install node-osc node-fetch figlet
 
 echo Installation complete.
 endlocal

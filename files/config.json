@@ -3,7 +3,9 @@
     "showid": true,
     "showemojis": true,
     "maxhistory": 15,
-    "showlogs": true
+    "showlogs": true,
+    "guilines": false,
+    "showtopandbottom_if_guilinesIsFalse": true
   },
   "bible": {
       "_comment" : "check https://bible-api.com/ for all translations",
@@ -15,9 +17,9 @@
     "show_emojisInLogs": true
   },
   "startup": {
-    "customstartupmessage": true,
+    "customstartupmessage": false,
     "custom_startmessage": "Opening the Bible...",
-    "customshutdownmessage": true,
+    "customshutdownmessage": false,
     "custom_shutmessage": "Closing the Bible..."
   }
 }
