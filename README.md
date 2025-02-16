@@ -35,7 +35,7 @@ sudo apk add nodejs npm
 Please search them in their offical package manager website
 ### Install Required Packages
 ```sh
-npm install node-osc node-fetch
+npm install node-osc
 npm install -g figlet
 ```
 
