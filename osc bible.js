@@ -16,8 +16,12 @@ REMARKS:                                                                        
 */
 
 const osc = require('node-osc');
-const config = require('./files/config.json'); // JSON loading via require
-const figlet = require('figlet');
+const config = require('./files/config.json'); // config json fil
+const figlet = require('figlet'); // stor ass tekst module
+const fs = require('fs');
+
+const version = fs.readFileSync("./VERSION.ver", "utf8").trim();
+
 /*
 TODO: Spread the gospel
 TODO: Spread the Word of God in VRChat
@@ -61,12 +65,17 @@ if (custom_startup_bool) {
 }
 
 const custom_shutdown_bool = Boolean(config.startup.customshutdownmessage); // true or false
-let custom_shutdown_msg;
 if (custom_shutdown_bool) {
-    custom_shutdown_msg = String(config.startup.custom_shutmessage);
+    var custom_shutdown_msg = String(config.startup.custom_shutmessage);
 } else {
-    custom_shutdown_msg = "Closing " + __filename.split(/[\\/]/).pop();
+    var custom_shutdown_msg = "Closing " + __filename.split(/[\\/]/).pop();
 }
+
+//* chatbox
+const linesinchatbox = Boolean(config.chatbox.linesinchatbox)
+const emojisinlines = Boolean(config.chatbox.showemojisinlines)
+const randomemojiInChatboxLines = Boolean(config.chatbox.randomemojiInlines)
+const nonrandomchosenemojiInChatboxLines = config.chatbox.if_randomemojiInLines_false_thenchoosethisemoji
 //! end of config
 
 const client = new osc.Client('127.0.0.1', 9000); // lave klient til lokal IP til port 9000
@@ -90,7 +99,7 @@ const emojis = [
     "❤️", // * luthersk hjerte
     "🍎", // * videns æble
     "👑", // * king of kings
-    "⚰️" // * bormand er død
+    "⚰️" // * brormand er død
 ]; // * 1 string lang please. hvis det er °, så er den unsigned af VRC's unicode version (gammel lort 👴👴👴👴👴👴)
 //! ༒ er ikke en kors men er en tibetansk udtale mark
 
@@ -120,23 +129,50 @@ function figlettext(text) {
 // send en OSC besked til /chatbox/input
 async function sendMessage(message)
 {
-    const maxLength = 144;
-    const chunks = message.match(new RegExp(`.{1,${maxLength}}`, 'g'));
+    if (linesinchatbox) {
+        var maxLength = 120;
+    } else {
+        var maxLength = 144;
+    }
 
+    const chunks = message.match(new RegExp(`.{1,${maxLength}}`, 'g'));
+    if (linesinchatbox) {
+        if (emojisinlines) {
+            if (randomemojiInChatboxLines) {
+                var bottom_emoji = emojis[rng(emojis.length - 1, 0)];
+                var top_emoji = emojis[rng(emojis.length - 1, 0)];
+            } else {
+                var bottom_emoji = nonrandomchosenemojiInChatboxLines;
+                var top_emoji = nonrandomchosenemojiInChatboxLines;
+            }
+        } else {
+            var bottom_emoji = "═";
+            var top_emoji = "═";
+        }
+    }
     for (const chunk of chunks)
     {
-        client.send('/chatbox/input', chunk, true, (err) => {
-            if (err) {
-                console.error('Error sending OSC message:', err);
-            }
-        });
+        if (linesinchatbox) {
+            client.send('/chatbox/input', `╔═══${top_emoji}═══╗\n` + chunk + `\n╚═══${bottom_emoji}═══╝`, true, (err) => {
+                if (err) {
+                    console.error('Error sending OSC message:', err);
+                }
+            });
+        } else {
+            client.send('/chatbox/input', chunk, true, (err) => {
+                if (err) {
+                    console.error('Error sending OSC message:', err);
+                }
+            });
+        }
 
         // * min 5 sec. 100ms pr. bogstav
         await sleep(Math.max(5000, chunk.length * 100));
     }
-};
+}
 figlettext(custom_startup_msg);
-sendMessage(custom_startup_msg);
+figlettext("version" + version)
+sendMessage(custom_startup_msg + ". version: " + version);
 // får en vers fra biblen
 async function getBibleVerse()
 {
@@ -167,7 +203,7 @@ async function getBibleVerse()
                 console.log("retrying to fetch bible verse from API")
                 await sleep(1000)
             } else {
-                return "Error: Unable to fetch a Bible verse.\nPlease check config.json or the API";
+                return "Error: Unable to fetch a Bible verse. Please check config.json or the API";
             }
         }
     }
