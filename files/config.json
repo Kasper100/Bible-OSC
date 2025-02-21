@@ -21,5 +21,11 @@
     "custom_startmessage": "Opening the Bible...",
     "customshutdownmessage": false,
     "custom_shutmessage": "Closing the Bible..."
+  },
+  "chatbox": {
+    "linesinchatbox": true,
+    "showemojisinlines": true,
+    "randomemojiInlines": true,
+    "if_randomemojiInLines_false_thenchoosethisemoji": "☦️"
   }
 }
