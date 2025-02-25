@@ -20,10 +20,10 @@ const config = require('./files/config.json'); // config json fil
 const figlet = require('figlet'); // stor ass tekst module
 const fs = require('fs');
 
-const version = fs.readFileSync("./VERSION.ver", "utf8").trim();
+const version = fs.readFileSync("./files/VERSION.ver", "utf8").trim();
 
 /*
-TODO: Spread the gospel
+TODO: Spread the Gospel
 TODO: Spread the Word of God in VRChat
 */
 
@@ -37,7 +37,7 @@ let lastverse = "";
 const showid = Boolean(config.graphics.showid);
 let maxhistory = parseInt(config.graphics.maxhistory) + 1;
 if (maxhistory === 0) {
-    maxhistory = Number.MAX_SAFE_INTEGER; // 2 ^ 53 - 1
+    maxhistory = Number.MAX_SAFE_INTEGER; // 2 ^ 53 - 1 = 9007199254740991
 }
 const showemoji = Boolean(config.graphics.showemojis);
 const showlogs = Boolean(config.graphics.showlogs);
@@ -75,7 +75,7 @@ if (custom_shutdown_bool) {
 const linesinchatbox = Boolean(config.chatbox.linesinchatbox)
 const emojisinlines = Boolean(config.chatbox.showemojisinlines)
 const randomemojiInChatboxLines = Boolean(config.chatbox.randomemojiInlines)
-const nonrandomchosenemojiInChatboxLines = config.chatbox.if_randomemojiInLines_false_thenchoosethisemoji
+const nonrandomchosenemojiInChatboxLines = config.chatbox.if_randomemojiInLines_false_thenchoosethisemoji // lang ass variable navn
 //! end of config
 
 const client = new osc.Client('127.0.0.1', 9000); // lave klient til lokal IP til port 9000
@@ -103,15 +103,12 @@ const emojis = [
 ]; // * 1 string lang please. hvis det er °, så er den unsigned af VRC's unicode version (gammel lort 👴👴👴👴👴👴)
 //! ༒ er ikke en kors men er en tibetansk udtale mark
 
-
 // ZZZZZzzzzzzzzzzzZZZZZZZZZZZZZZZZzzzzzzzzzzzzzzzZZZZZZZZZZZZZZZzzzzzzzzzzzzzzzzzzzz
-function sleep(ms)
-{
+function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-function rng(max, min)
-{
+function rng(max, min) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -122,13 +119,12 @@ function figlettext(text) {
             return;
         } else {
             console.log(data);
-        }}
-    )
-}
+        }
+    });
+};
 
 // send en OSC besked til /chatbox/input
-async function sendMessage(message)
-{
+async function sendMessage(message) {
     if (linesinchatbox) {
         var maxLength = 120;
     } else {
@@ -150,10 +146,10 @@ async function sendMessage(message)
             var top_emoji = "═";
         }
     }
-    for (const chunk of chunks)
-    {
+    for (const chunk of chunks) {
         if (linesinchatbox) {
-            client.send('/chatbox/input', `╔═══${top_emoji}═══╗\n` + chunk + `\n╚═══${bottom_emoji}═══╝`, true, (err) => {
+            client.send('/chatbox/input', `╔═══${top_emoji}═══╗\n` + chunk + `\n╚═══${bottom_emoji}═══╝`, true, (err) => 
+            {
                 if (err) {
                     console.error('Error sending OSC message:', err);
                 }
@@ -170,17 +166,17 @@ async function sendMessage(message)
         await sleep(Math.max(5000, chunk.length * 100));
     }
 }
+
 figlettext(custom_startup_msg);
-figlettext("version" + version)
+figlettext("version" + version);
 sendMessage(custom_startup_msg + ". version: " + version);
-// får en vers fra biblen
-async function getBibleVerse()
-{
+
+// får en vers fra bibelen
+async function getBibleVerse() {
     let retries = 3;
     let trys = 0;
     while (trys < retries) {
-        try
-        {
+        try {
             const response = await fetch(`https://bible-api.com/data/${bibletranslation}/random`);
             const data = await response.json();
             if (data.random_verse && data.random_verse.book && data.random_verse.chapter && data.random_verse.verse && data.random_verse.text)
@@ -190,17 +186,14 @@ async function getBibleVerse()
                {TEXT}
             */
                 return `${data.random_verse.book} ${data.random_verse.chapter}:${data.random_verse.verse};\n${data.random_verse.text}`;
-            } else
-            {
+            } else {
                 throw new Error("Invalid response structure from API");
             }
-        } catch (error)
-        {
+        } catch (error) {
             console.error("Error fetching Bible verse:", error);
             trys++;
-            if (trys < retries)
-            {
-                console.log("retrying to fetch bible verse from API")
+            if (trys < retries) {
+                console.log("Retrying to fetch bible verse from API")
                 await sleep(1000)
             } else {
                 return "Error: Unable to fetch a Bible verse. Please check config.json or the API";
@@ -209,11 +202,9 @@ async function getBibleVerse()
     }
 };
 
-// * funktion'en navn siger det hele
-async function startSendingVerses()
-{
-    while (true)
-    {
+// * funktionet navn siger det hele
+async function startSendingVerses() {
+    while (true) {
         console.log("\x1Bc"); //* clear
         if (messages.length > maxhistory) {
             messages.splice(1, messages.length - maxhistory)
@@ -221,7 +212,7 @@ async function startSendingVerses()
         // ikke send samme vers
         do {
             var verse = await getBibleVerse();
-        } while (verse == lastverse);
+        } while (verse === lastverse);
         
         lastverse = verse;
         
@@ -238,45 +229,36 @@ async function startSendingVerses()
         versID += 1;
         
         sendMessage(chosenEmoji + verse);
-        if (showid)
-        {
-            if (showemojiinlogs)
-            {
+        if (showid) {
+            if (showemojiinlogs) {
                 messages.push(chosenEmoji + verse + `(ID: ${versID})`);
             } else {
                 messages.push(verse + `(ID: ${versID})`)
             }
         } else {
-            if (showemojiinlogs)
-            {
+            if (showemojiinlogs) {
                 messages.push(chosenEmoji + verse)
             } else {
                 messages.push(verse)
             }
         }
-        if (showlines || !showlines && showmainlines)
-        {
+        if (showlines || !showlines && showmainlines) {
             console.log(`╔══════════${emojis[rng(emojis.length - 1, 0)]}═════════╗`)
         }
-        if (showlogs)
-        {
+        if (showlogs) {
             // gental historie
             for (let i = 1; i < messages.length; i++)
             {
-                if (showlines)
-                {
+                if (showlines) {
                     console.log("══════════╗");
                     console.log(messages[i]);
                     console.log("══════════╝");
-                } else
-                {
+                } else {
                     console.log(messages[i], "\n");
                 }
             }
-        } else 
-        {
-            if (showemojiinlogs)
-            {
+        } else {
+            if (showemojiinlogs) {
                 console.log(chosenEmoji + verse + `(ID: ${versID})`);
             } else {
                 console.log(verse + `(ID: ${versID})`);
@@ -285,7 +267,7 @@ async function startSendingVerses()
         if (showlines || !showlines && showmainlines) {
             console.log(`╚══════════${emojis[rng(emojis.length - 1, 0)]}═════════╝\n`, messages[0]);
         }
-            // ! Math.min(verse.length, ms pr bogstav), min) max);
+                                    // !  (verse.length * ms pr bogstav, min), max);
         const interval = Math.min(Math.max(verse.length * 750, 10000), 30000);
         await sleep(interval);
     }
@@ -294,10 +276,17 @@ async function startSendingVerses()
 // * start lortet
 startSendingVerses();
 
-// ! GET OUT!!!!
+// ! GET OUT!!!! (jeg dragger den lorte meme)
 process.on('SIGINT', () => {
     console.log("\x1Bc");
     figlettext(custom_shutdown_msg);
     client.close();
     process.exit();
+});
+
+// ! anti-crash
+process.on('uncaughtException', (err) => {
+    console.error("Unexpected error:", err);
+    console.log("Restarting...");
+    setTimeout(() => process.exit(1), 5000);
 });
