@@ -1,0 +1,38 @@
+{
+  "graphics": {
+    "showid": true,
+    "showemojis": true,
+    "maxhistory": 15,
+    "showlogs": true,
+    "guilines": false,
+    "showtopandbottom_if_guilinesIsFalse": true
+  },
+  "bible": {
+      "_comment" : "check https://bible-api.com/ for all translations",
+      "translation": "oeb-cw"
+  },
+  "emoji": {
+    "randomemoji": true,
+    "if_false_thenchoosethisemoji": "✝️",
+    "show_emojisInLogs": true
+  },
+  "startup": {
+    "customstartupmessage": false,
+    "custom_startmessage": "Opening the Bible...",
+    "customshutdownmessage": false,
+    "custom_shutmessage": "Closing the Bible..."
+  },
+  "chatbox": {
+    "linesinchatbox": true,
+    "showemojisinlines": true,
+    "randomemojiInlines": true,
+    "if_randomemojiInLines_false_thenchoosethisemoji": "☦️",
+    "showBibleVerse_text": true
+  },
+  "beta": {
+    "graphics": {
+      "_comment": "↓ doesnt show in chat: only in the terminal.",
+      "newguilines": true
+    }
+  }
+}
