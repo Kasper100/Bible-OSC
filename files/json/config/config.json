@@ -32,7 +32,7 @@
   "beta": {
     "graphics": {
       "_comment": "↓ doesnt show in chat: only in the terminal.",
-      "newguilines": true
+      "newguilines": false
     }
   }
 }
