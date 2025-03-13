@@ -1,26 +1,36 @@
-/*
-------------------------------------------------------------------------------------------|
-INFORMATION:                                                                              |
-    Hi! Most of the comments are in Danish. Please translate them to understand them.     |
-    This program was made with Windows in mind but also supports Linux/Unix systems.      |
-    If you are using VSCode to look through the code, then please have-                   |
-    the extension "Better Comments" installed as it should be easier to read and sort.    |
-------------------------------------------------------------------------------------------|
-REMARKS:                                                                                  |
-    Remember that this is made for a game called VRChat,                                  |
-    which is available on Steam and the Oculus Store.                                     |
-    If you get banned from some groups, it's not my fault.                                |
-    it just means you were hanging out with the wrong people.                             |
-    Just rememeber to enable OSC in VRChat.                                               |
-------------------------------------------------------------------------------------------|
-*/
+//! ┌──────────────────────────────────────────────────────────────────────────────────────────┐
+//! │  INFORMATION:                                                                            │
+//! │      Hi! Most of the comments are in Danish. Please translate them to understand them.   │
+//! │      This program was made with Windows in mind but also supports Linux/Unix systems.    │
+//! │      If you are using VSCode to look through the code, then please have-                 │
+//! │      the extension "Better Comments" installed as it should be easier to read and sort.  │
+//! │──────────────────────────────────────────────────────────────────────────────────────────│
+//! │  REMARKS:                                                                                │
+//! │      Remember that this is made for a game called VRChat,                                │
+//! │      which is available on Steam and the Oculus Store.                                   │
+//! │      If you get banned from some groups, it's not my fault.                              │
+//! │      it just means you were hanging out with the wrong people.                           │
+//! │      Just rememeber to enable OSC in VRChat.                                             │
+//! └──────────────────────────────────────────────────────────────────────────────────────────┘
+
 
 const osc = require('node-osc'); // OSC (duh!)
-const config = require('./files/json/config/config.json'); // config json fil
+const json5 = require('json5'); // JSON5 opdatering
 const figlet = require('figlet'); // stor ass tekst module
 const fs = require('fs'); // får data from non-json filer
 
+// version checking
 const version = fs.readFileSync("./files/VERSION.data", "utf8").trim();
+
+
+// JSON5 parsing
+const configdata = fs.readFileSync("./files/json/config/config.json5", "utf8");
+const config = json5.parse(configdata);
+
+/*
+gammel config fil
+const config = require('./files/json/config/config.json'); // config json fil
+*/
 
 /*
 TODO: Spread the Gospel
@@ -32,7 +42,7 @@ let messagestring_beta = "";
 let versID = 0;
 let lastverse = "";
 
-//! config; (as in /files/config.json)
+//! config; (as in /files/json/config/config.json5)
 
 //* graphics
 const showid = Boolean(config.graphics.showid);
@@ -79,33 +89,52 @@ if (custom_shutdown_bool) {
 const linesinchatbox = Boolean(config.chatbox.linesinchatbox);
 const emojisinlines = Boolean(config.chatbox.showemojisinlines);
 const randomemojiInChatboxLines = Boolean(config.chatbox.randomemojiInlines);
-const nonrandomchosenemojiInChatboxLines = config.chatbox.if_randomemojiInLines_false_thenchoosethisemoji; // lang ass variable navn
+const nonrandomchosenemojiInChatboxLines = config.chatbox.if_randomemojiInLines_false_thenchoosethisemoji; // lang fucking variable navn
 const Show_BibleVerseText = Boolean(config.chatbox.showBibleVerse_text);
+
+//* fun
+const ttsboolean = config.fun.tts
+if (ttsboolean) {
+    var tts = require("say")
+}
+
+const randomID = config.fun.randomID
+
+// * dev
+const dev = Boolean(config.dev) //! ubrugligt lort
 
 //! end of config
 
-const client = new osc.Client('127.0.0.1', 9000); // lave klient til lokal IP til port 9000
+const client = new osc.Client('127.0.0.1', 9000); // lave OSC klient til lokal IP til port 9000
 
 function loadJsonToList(filename) {
     try {
         const data = fs.readFileSync(filename, 'utf-8');
-        const list = JSON.parse(data);
+        const list = json5.parse(data);
         
         if (!Array.isArray(list)) {
-            throw new Error("JSON is not an array!");
+            throw new Error("JSON5 file is not an array!");
         }
 
         return list;
     } catch (err) {
-        console.error("Error loading JSON:", err);
-        console.warn("Using backup emojis")
-        return ["☦️", "✝️", "👼", "❤️"];
+        console.error("\x1b[31mError loading JSON5:", err + "\x1b[0m");
+        console.warn("\x1b[33Using backup emojis!\x1b[0m")
+        return [
+            "☦️", 
+            "✝️", 
+            "👼", 
+            "❤️", 
+            "🍞", 
+            "😇"
+        ];
     }
 }
-const emojis = loadJsonToList("./files/json/emojis.json");
+const emojis = loadJsonToList("./files/json/emojis.json5");
+
+//* ↓ helper functions
 
 // ZZZZZzzzzzzzzzzzZZZZZZZZZZZZZZZZzzzzzzzzzzzzzzzZZZZZZZZZZZZZZZzzzzzzzzzzzzzzzzzzzz
-//* ↓ helper functions
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
@@ -125,15 +154,16 @@ function figlettext(text) {
         });
     });
 }
-
-function drawBox(text, idlines) {
-    if (idlines) {
-        var linesid = idlines
+//! BETA
+function drawBox(text, id) {
+    //! check hvis id fik en value
+    if (Number.isInteger(id)) {
+        var linesid = id
     } else {
-        var linesid = 0;
+        var linesid = 0; //* default value if not specified or is not vaild
     }
     const lines = text.split("\n");
-    const maxLength = Math.max(...lines.map(line => line.length));
+    const maxLength = Math.max(...lines.map(line => line.length)); //* tak chatgpt
 
     const width = maxLength + 4;
     if (linesid === 1) {
@@ -163,14 +193,14 @@ function drawBox(text, idlines) {
 
 //* ↑ helper functions
 
-// send en OSC besked til /chatbox/input
+//* send en OSC besked til /chatbox/input
 async function sendMessage(message) {
     if (linesinchatbox) {
         var maxLength = 120;
     } else {
         var maxLength = 144;
     }
-    const chunks = message.match(new RegExp(`.{1,${maxLength}}`, 'g'));
+    const chunks = message.match(new RegExp(`.{1,${maxLength}}`, 'g')); //* split besked indtil en array
     if (linesinchatbox) {
         if (emojisinlines) {
             if (randomemojiInChatboxLines) {
@@ -197,6 +227,7 @@ async function sendMessage(message) {
         } else {
             var input = chunk
         }
+        //* send besked
         client.send('/chatbox/input', input, true, (err) => {
             if (err) {
                 console.error('Error sending OSC message:', err);
@@ -207,12 +238,34 @@ async function sendMessage(message) {
     }
 };
 
+//* startup messages
 figlettext(custom_startup_msg + "\nversion: " + version).then(data => drawBox(data, 1));
-sendMessage(custom_startup_msg + ". version: " + version);
+if (dev == true) {
+    sendMessage(custom_startup_msg + ". version: " + version + " (developer mode enabled)"); //* soooo sigma
+} else {
+    sendMessage(custom_startup_msg + ". version: " + version);
+}
+
+// version checking;
+async function versionCheck(ver) {
+    const response = await fetch("https://raw.githubusercontent.com/Kasper100/Bible-OSC/refs/heads/main/files/VERSION.data");
+    const currentversion = (await response.text()).trim();
+
+    if (ver === currentversion) {
+        console.log(`\x1b[32mlatest version (${ver})\x1b[0m\n`);
+    } else {
+        if (dev === true) {
+            console.log("bro is working on a new version\n")
+        } else {
+            console.warn(`\x1b[33mNew version (${currentversion}) is out!\n(your version: ${ver})\x1b[0m\n`);
+        }
+    }
+}
+versionCheck(version)
 
 // får en vers fra bibelen
 async function getBibleVerse() {
-    let retries = 3;
+    const retries = 3;
     let trys = 0;
     while (trys < retries) {
         try {
@@ -220,26 +273,30 @@ async function getBibleVerse() {
             const data = await response.json();
             if (data.random_verse && data.random_verse.book && data.random_verse.chapter && data.random_verse.verse && data.random_verse.text)
             {
-            /* format:
-               {BOOK} {CHAPTER}:{VERSE};
-               {TEXT}
-            */
                 if (Show_BibleVerseText) {
+                    if (ttsboolean === true) {
+                        tts.speak(data.random_verse.text); //* use VB-Cable/Voicemeeter to output in a microphone
+                    }
+                    /* format:
+                    {BOOK} {CHAPTER}:{VERSE};
+                    {TEXT}
+                    */
                     return `${data.random_verse.book} ${data.random_verse.chapter}:${data.random_verse.verse}\n${data.random_verse.text}`;
                 } else {
-                    return `${data.random_verse.book} ${data.random_verse.chapter}:${data.random_verse.verse}`
+                    return `${data.random_verse.book} ${data.random_verse.chapter}:${data.random_verse.verse}`;
                 }
             } else {
-                throw new Error("Invalid response structure from API");
+                throw new Error("Invalid response structure from API (New JSON format???)");
             }
         } catch (error) {
+            //? this is tested like once
             console.error("Error fetching Bible verse:", error);
             trys++;
             if (trys < retries) {
-                console.log("Retrying to fetch bible verse from API")
+                drawBox("Retrying to fetch bible verse from API", 0)
                 await sleep(1000)
             } else {
-                return "Error: Unable to fetch a Bible verse. Please check ./files/config.json or the API";
+                return "Error: Unable to fetch a Bible verse. Please check ./files/json/config/config.json5 or the API";
             }
         }
     }
@@ -251,7 +308,7 @@ async function startSendingVerses() {
     while (true) {
         console.log("\x1Bc"); //* clear
         if (messages.length > maxhistory) {
-            messages.splice(0, messages.length - maxhistory)
+            messages.splice(0, messages.length - maxhistory);
         }
         // ikke send samme vers
         do {
@@ -270,7 +327,11 @@ async function startSendingVerses() {
             var chosenEmoji = "";
         }
         
-        versID += 1;
+        if (randomID) {
+            versID += rng(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER)
+        } else {
+            versID += 1;
+        }
         
         sendMessage(chosenEmoji + verse);
 
@@ -282,13 +343,13 @@ async function startSendingVerses() {
             }
         } else {
             if (showemojiinlogs) {
-                messages.push(chosenEmoji + verse)
+                messages.push(chosenEmoji + verse);
             } else {
-                messages.push(verse)
+                messages.push(verse);
             }
         }
         if (showlines || !showlines && showmainlines) {
-            console.log(`╔══════════${emojis[rng(emojis.length - 1, 0)]}═════════╗`)
+            console.log(`╔══════════${emojis[rng(emojis.length - 1, 0)]}═════════╗`);
         }
         if (showlogs) {
             // gental historie
@@ -330,18 +391,19 @@ async function startSendingVerses() {
     }
 };
 
-// * start lortet
+// * start min dårlig kode
 startSendingVerses();
 
 // ! Ctrl + C (sikkert exit)
 process.on('SIGINT', () => {
     console.log("\x1Bc");
-    figlettext(custom_shutdown_msg);
+    figlettext(custom_shutdown_msg).then(data => drawBox(data, 1)); //? virker ik'??????
     client.close();
     process.exit();
 });
 
-// ! anti-crash (hvis min kode er lort)
+// ! anti-crash (hvis mit kode er lort)
+// ? ved ikke hvis det er virker
 process.on('uncaughtException', (err) => {
     console.error("Unexpected error:", err);
     console.log("Restarting...");
