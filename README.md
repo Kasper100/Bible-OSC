@@ -42,7 +42,7 @@ npm install node-osc figlet
 Run the client with:
 
 #### Windows:
-```pwsh
+```powershell
 node "osc bible.js"
 ```
 #### Linux:
