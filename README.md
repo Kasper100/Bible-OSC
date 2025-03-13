@@ -10,7 +10,7 @@ This project is a client designed to send Bible verses in VRChat using OSC (Open
 
 ## Installation
 
-### Git Clone (both platforms + optional if downloaded ZIP file)
+### Git Clone (both platforms + Recommended)
 ```sh
 git clone https://github.com/Kasper100/Bible-OSC.git
 cd Bible-OSC
