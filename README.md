@@ -1,12 +1,8 @@
 # VRChat Bible Verse Client
-This project is a client designed to send Bible verses in VRChat using OSC (Open Sound Control). It fetches random verses from an online [Bible API](https://bible-api.com/) and sends them as chatbox messages in VRChat.
-
-## Features
-- Fetches random Bible verses from [Bible API](https://bible-api.com/).
-- Sends messages to VRChat's chatbox via OSC.
-- Configurable settings via `config.json5`.
-- Emoji customization.
-- Works on Windows and most Unix systems.
+This project is designed to spread the Gospel, without saying a word! This project is also designed to be cross-platform and lightweight.
+### Disclaimer:
+This process of this project has slowed down a lot.
+Any Pull Requests will be nice.
 
 ## Installation
 
@@ -25,7 +21,7 @@ winget install -e --id OpenJS.NodeJS
 ```sh
 sudo apt install nodejs npm
 ```
-#### Fedora:
+#### Fedora / CentOS:
 ```sh
 sudo dnf install nodejs npm
 ```
