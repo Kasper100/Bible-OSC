@@ -45,6 +45,7 @@ npm i say
 ```
 
 ## Usage
+Make sure that OSC is enabled in VRChat.
 Run the client with:
 
 #### Windows:
@@ -55,8 +56,35 @@ node "osc bible.js"
 ```sh
 node osc\ bible.js
 ```
+## Compile
+You could also compile the program to share with friends or non-tech savvy people
 
-Make sure that OSC is enabled in VRChat.
+Make the package.json:
+```json
+{
+  "name": "osc-bible",
+  "version": "1.0.0",
+  "main": "osc bible.js",
+  "dependencies": {
+    "figlet": "^1.5.2",
+    "json5": "^2.2.3",
+    "node-fetch": "^2.7.0",
+    "node-osc": "^4.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "files/**/*",
+      "highscore/**/*"
+    ]
+  }
+}
+```
+
+and compile it
+```bash
+pkg "osc bible.js" --targets node16-linux-x64,node16-win-x64 --output "osc-bible"
+```
+remove "node16-linux-x64" to not compile for linux, or "node16-win-x64" to not compile on windows.
 
 ## Configuration
 Modify `config.json5` to adjust settings such as emoji usage, Bible translation ([Bible API](https://bible-api.com/)), and display preferences.
