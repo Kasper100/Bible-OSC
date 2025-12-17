@@ -1,0 +1,17 @@
+{
+  "name": "osc-bible",
+  "version": "1.0.0",
+  "main": "osc bible.js",
+  "dependencies": {
+    "figlet": "^1.5.2",
+    "json5": "^2.2.3",
+    "node-fetch": "^2.7.0",
+    "node-osc": "^4.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "files/**/*",
+      "highscore/**/*"
+    ]
+  }
+}

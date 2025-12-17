@@ -3,12 +3,13 @@
     "showid": true,
     "showemojis": true,
     "maxhistory": 15,
-    "showlogs": true,
+    "showlogs": true, // * will only show the logs in the terminal/console
     "guilines": false,
     "showtopandbottom_if_guilinesIsFalse": true
   },
   "bible": {
-      "translation": "oeb-cw" // check https://bible-api.com/ for all translations
+    "translation": "oeb-cw", // check https://bible-api.com/ for all translations
+    "NTonly": false // if true, only the New Testament verses are gonna be outputed
   },
   "emoji": {
     "randomemoji": true,
@@ -25,17 +26,23 @@
     "linesinchatbox": true,
     "showemojisinlines": true,
     "randomemojiInlines": true,
-    "if_randomemojiInLines_false_thenchoosethisemoji": "☦️",
+    "if_randomemojiInLines_false_thenchoosethese_emojis": true, //* long json name 💀💀💀
+    "nonrandomemojis": {
+      "nonrandom_topemoji": "✝️",
+      "nonrandom_bottomemoji": "☦️"
+    },
     "showBibleVerse_text": true
   },
   "beta": {
     "graphics": {
-      "newguilines": false //! doesnt show in chat: only in the terminal.
+      "newguilines": false, //! doesnt show in chat: only in the terminal.  
+      "invisible_background": true
     },
   },
   "fun": {
     "tts": false, // requires say.js (npm i say) https://www.npmjs.com/package/say
-    "randomID": false
+    "randomID": false,
+    "highscoreSystem": true //! requires randomID to be false
   },
   "dev": false
 }

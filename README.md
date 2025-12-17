@@ -101,3 +101,4 @@ It's not the dev's (me) fault if you get kicked/banned from some groups.
 
 # God bless you.
 ## Made with love from Denmark ❤️
+

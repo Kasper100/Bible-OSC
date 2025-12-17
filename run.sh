@@ -1,0 +1,1 @@
+node "osc bible.js" "$@"
