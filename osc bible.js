@@ -494,8 +494,8 @@ async function handleShutdown() {
     });
     console.log("\x1Bc");
     figlettext(custom_shutdown_msg).then(data => drawBox(data, 1)); //? virker ik'??????
-    client.close();
     await sleep(1000); // give some time for the message to be sent
+    client.close();
     process.exit();
 }
 
@@ -514,3 +514,4 @@ process.on('uncaughtException', (err) => {
 
 // * start min dårlig kode
 startSendingVerses();
+
