@@ -1,6 +1,10 @@
 # Bible-OSC (BOSC)
 This project is designed to spread the Gospel, without saying a word! This project is also designed to be cross-platform and lightweight.
+
 (41 MiB recorded on linux) 
+
+## **This tool is made for VRChat.**
+If you dont play [VRChat](https://hello.vrchat.com/), then this tool isnt for you.
 ### Disclaimer:
 This process of this project has slowed down a lot.
 Any Pull Requests will be nice.
