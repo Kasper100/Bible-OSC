@@ -51,6 +51,7 @@ npm i say
 
 ## Usage
 Make sure that OSC is enabled in VRChat.
+
 Run the client with:
 
 #### Windows:
@@ -101,6 +102,7 @@ This software is subject to the terms of the [GNU](https://www.gnu.org/) General
 
 ## Disclaimer
 Some groups/people may not like that you have a Bible on your head.
+
 It's not the dev's (me) fault if you get kicked/banned from some groups.
 
 # God bless you.
