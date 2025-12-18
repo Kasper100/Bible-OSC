@@ -1,4 +1,4 @@
-# VRChat Bible Verse Client
+# Bible-OSC (BOSC)
 This project is designed to spread the Gospel, without saying a word! This project is also designed to be cross-platform and lightweight.
 (41 MiB recorded on linux) 
 ### Disclaimer:
