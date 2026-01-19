@@ -91,6 +91,7 @@ and compile it
 pkg "osc bible.js" --targets node16-linux-x64,node16-win-x64 --output "osc-bible"
 ```
 remove "node16-linux-x64" to not compile for linux, or "node16-win-x64" to not compile on windows.
+Make sure to have `./files` and `./highscore` in the same folder as the executable
 
 ## Configuration
 Modify `config.json5` to adjust settings such as emoji usage, Bible translation ([Bible API](https://bible-api.com/)), and display preferences.
