@@ -1,4 +1,6 @@
 # Bible-OSC (BOSC)
+<img width="720" height="395" alt="bible osc lort" src="https://github.com/user-attachments/assets/b98b4a6f-25d6-4744-8ea1-f533ce4d391d" />
+
 This project is designed to spread the Gospel, without saying a word! This project is also designed to be cross-platform and lightweight.
 
 (41 MiB recorded on linux (arch) and windows 10) 
@@ -97,6 +99,9 @@ Make sure to have `./files` and `./highscore` in the same folder as the executab
 Modify `config.json5` to adjust settings such as emoji usage, Bible translation ([Bible API](https://bible-api.com/)), and display preferences.
 
 Also modify `emojis.json5` for custom emojis
+
+## GUI
+Later.
 
 ## License
 This software is subject to the terms of the [GNU](https://www.gnu.org/) General Public License 3.0 (GPL 3.0). By this, you are free to use, make changes and pass on the software. But such modification and enhancements have to also be licensed in GPL 3.0 as well.
